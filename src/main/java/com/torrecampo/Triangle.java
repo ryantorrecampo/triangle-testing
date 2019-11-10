@@ -5,7 +5,7 @@ import java.util.Comparator;
 import java.util.Vector;
 
 class Triangle {
-    private double a, b, c, s;
+    double a, b, c, s;
     private Vector<String> types = new Vector<String>();
 
     Triangle(Point pt1, Point pt2, Point pt3, double sideA, double sideB, double sideC) {
@@ -26,9 +26,9 @@ class Triangle {
 
     boolean isDegenerate() {
         ArrayList<Double> sides = new ArrayList<>();
-        sides.add(this.a);
-        sides.add(this.b);
-        sides.add(this.c);
+        sides.add(a);
+        sides.add(b);
+        sides.add(c);
         sides.sort(Comparator.comparingDouble(a -> a));
         return (sides.get(0) + sides.get(1)) <= sides.get(2);
 
@@ -38,71 +38,52 @@ class Triangle {
         if (a == b && b == c) {
             types.addElement("Equilateral");
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
     boolean isIsosceles() {
-        if (a == b) {
-            if (a != c || b != c) {
-                types.addElement("Isosceles");
-                return true;
-            }
-        }
-        else if (a == c) {
-            if (a != b || c != b) {
-                types.addElement("Isosceles");
-                return true;
-            }
-        }
-        else if (b == c) {
-            if (b != a || c != a) {
-                types.addElement("Isosceles");
-                return true;
-            }
-        }
-        return false;
+        return (a==b) || (b==c) || (a==c);
     }
 
     boolean isScalene() {
         if (a != b && b != c && a != c) {
             types.addElement("Scalene");
             return true;
-        } else {
-            return false;
         }
+        return false;
+    }
+
+    // i.e. 2.00 == 2.000004 (used when input is sqrt())
+    private static boolean approximatelyEqual(double desiredValue, double actualValue) {
+        double diff = Math.abs(desiredValue - actualValue);
+        double tolerance = (float) 0.02 /100 * desiredValue;
+        return diff < tolerance;
     }
 
     boolean isRight() {
         double x = Math.pow(a, 2);
         double y = Math.pow(b, 2);
         double z = Math.pow(c, 2);
-        if (x + y == z) {
+        if (approximatelyEqual(z, x+y)) {
             types.addElement("Right");
             return true;
-        } else if (y + z == x) {
+        } else if (approximatelyEqual(x, y+z)) {
             types.addElement("Right");
             return true;
-        } else if (z + x == y) {
+        } else if (approximatelyEqual(y, z+x)) {
             types.addElement("Right");
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
-    private void printTypes() {
-        for (String type : types) {
-            System.out.println(type);
-        }
+    double getSemiPerimeter() {
+        s = ((a + b + c) / 2);
+        return s;
     }
 
-    private void getSemiPerimeter() {
-        this.s = ((a + b + c) / 2);
-    }
-
-    private double getArea() {
+    double getArea() {
         return Math.sqrt(s*(s-a)*(s-b)*(s-c));
     }
 }

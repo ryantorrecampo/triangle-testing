@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Triangle.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">triangle-testing</a> &gt; <a href="index.source.html" class="el_package">com.torrecampo</a> &gt; <span class="el_source">Triangle.java</span></div><h1>Triangle.java</h1><pre class="source lang-java linenums">package com.torrecampo;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Vector;
+
+class Triangle {
+    double a, b, c, s;
+<span class="fc" id="L9">    private Vector&lt;String&gt; types = new Vector&lt;String&gt;();</span>
+
+<span class="fc" id="L11">    Triangle(Point pt1, Point pt2, Point pt3, double sideA, double sideB, double sideC) {</span>
+<span class="fc bfc" id="L12" title="All 6 branches covered.">        if(pt1 != null &amp;&amp; pt2 != null &amp;&amp; pt3 != null) {</span>
+<span class="fc" id="L13">            this.a = Math.sqrt((pt2.getX()-pt1.getX())*(pt2.getX()-pt1.getX()) + (pt2.getY()-pt1.getY())*(pt2.getY()-pt1.getY()));</span>
+<span class="fc" id="L14">            this.b = Math.sqrt((pt3.getX()-pt2.getX())*(pt3.getX()-pt2.getX()) + (pt3.getY()-pt2.getY())*(pt3.getY()-pt2.getY()));</span>
+<span class="fc" id="L15">            this.c = Math.sqrt((pt3.getX()-pt1.getX())*(pt3.getX()-pt1.getX()) + (pt3.getY()-pt1.getY())*(pt3.getY()-pt1.getY()));</span>
+        } else {
+<span class="fc" id="L17">            this.a = sideA;</span>
+<span class="fc" id="L18">            this.b = sideB;</span>
+<span class="fc" id="L19">            this.c = sideC;</span>
+        }
+<span class="fc" id="L21">    }</span>
+
+    boolean isValid() {
+<span class="fc bfc" id="L24" title="All 6 branches covered.">        return (a + b &gt; c) &amp;&amp; (a + c &gt; b) &amp;&amp; (b + c &gt; a);</span>
+    }
+
+    boolean isDegenerate() {
+<span class="fc" id="L28">        ArrayList&lt;Double&gt; sides = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L29">        sides.add(a);</span>
+<span class="fc" id="L30">        sides.add(b);</span>
+<span class="fc" id="L31">        sides.add(c);</span>
+<span class="fc" id="L32">        sides.sort(Comparator.comparingDouble(a -&gt; a));</span>
+<span class="fc bfc" id="L33" title="All 2 branches covered.">        return (sides.get(0) + sides.get(1)) &lt;= sides.get(2);</span>
+
+    }
+
+    boolean isEquilateral() {
+<span class="fc bfc" id="L38" title="All 4 branches covered.">        if (a == b &amp;&amp; b == c) {</span>
+<span class="fc" id="L39">            types.addElement(&quot;Equilateral&quot;);</span>
+<span class="fc" id="L40">            return true;</span>
+        }
+<span class="fc" id="L42">        return false;</span>
+    }
+
+    boolean isIsosceles() {
+<span class="fc bfc" id="L46" title="All 6 branches covered.">        return (a==b) || (b==c) || (a==c);</span>
+    }
+
+    boolean isScalene() {
+<span class="fc bfc" id="L50" title="All 6 branches covered.">        if (a != b &amp;&amp; b != c &amp;&amp; a != c) {</span>
+<span class="fc" id="L51">            types.addElement(&quot;Scalene&quot;);</span>
+<span class="fc" id="L52">            return true;</span>
+        }
+<span class="fc" id="L54">        return false;</span>
+    }
+
+    // i.e. 2.00 == 2.000004 (used when input is sqrt())
+    private static boolean approximatelyEqual(double desiredValue, double actualValue) {
+<span class="fc" id="L59">        double diff = Math.abs(desiredValue - actualValue);</span>
+<span class="fc" id="L60">        double tolerance = (float) 0.02 /100 * desiredValue;</span>
+<span class="fc bfc" id="L61" title="All 2 branches covered.">        return diff &lt; tolerance;</span>
+    }
+
+    boolean isRight() {
+<span class="fc" id="L65">        double x = Math.pow(a, 2);</span>
+<span class="fc" id="L66">        double y = Math.pow(b, 2);</span>
+<span class="fc" id="L67">        double z = Math.pow(c, 2);</span>
+<span class="fc bfc" id="L68" title="All 2 branches covered.">        if (approximatelyEqual(z, x+y)) {</span>
+<span class="fc" id="L69">            types.addElement(&quot;Right&quot;);</span>
+<span class="fc" id="L70">            return true;</span>
+<span class="fc bfc" id="L71" title="All 2 branches covered.">        } else if (approximatelyEqual(x, y+z)) {</span>
+<span class="fc" id="L72">            types.addElement(&quot;Right&quot;);</span>
+<span class="fc" id="L73">            return true;</span>
+<span class="fc bfc" id="L74" title="All 2 branches covered.">        } else if (approximatelyEqual(y, z+x)) {</span>
+<span class="fc" id="L75">            types.addElement(&quot;Right&quot;);</span>
+<span class="fc" id="L76">            return true;</span>
+        }
+<span class="fc" id="L78">        return false;</span>
+    }
+
+    double getSemiPerimeter() {
+<span class="fc" id="L82">        s = ((a + b + c) / 2);</span>
+<span class="fc" id="L83">        return s;</span>
+    }
+
+    double getArea() {
+<span class="fc" id="L87">        return Math.sqrt(s*(s-a)*(s-b)*(s-c));</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
