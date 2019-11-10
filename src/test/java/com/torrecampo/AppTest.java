@@ -406,4 +406,13 @@ public class AppTest
             assertTrue(tri.isIsosceles());
         }
     }
+
+    @Test
+    public void checkEquilateralIsosceles() {
+        Triangle tri = new Triangle(null, null, null, 3, 3, 3);
+        if(tri.isValid() && !tri.isDegenerate()) {
+            assertTrue(tri.isIsosceles());
+            assertTrue(tri.isEquilateral());
+        }
+    }
 }
